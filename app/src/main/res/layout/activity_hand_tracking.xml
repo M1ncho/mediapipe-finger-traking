@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HandTrackingActivity">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout_hand_select"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:id="@+id/tv_left"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/carolina_blue"
+                android:textSize="20sp"
+                android:textColor="@color/dark_grey_blue"
+                android:gravity="center"
+                android:text="왼손"/>
+
+
+            <TextView
+                android:id="@+id/tv_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/dark_royal_blue"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text="오른손"/>
+
+        </LinearLayout>
+
+
+
+        <FrameLayout
+            android:id="@+id/preview_display_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_hand_select"
+            app:layout_constraintBottom_toBottomOf="parent">
+        </FrameLayout>
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_countdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/layout_hand_select">
+
+
+            <ImageView
+                android:id="@+id/iv_timer"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/ic_clock"/>
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/iv_timer"
+                app:layout_constraintTop_toBottomOf="@id/iv_timer"
+                app:layout_constraintStart_toEndOf="@id/iv_timer"
+                android:layout_marginStart="9dp"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:text="15"/>
+
+
+            <ProgressBar
+                android:id="@+id/bar_timer"
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/progress_background"
+                app:layout_constraintTop_toTopOf="@id/iv_timer"
+                app:layout_constraintBottom_toBottomOf="@id/iv_timer"
+                app:layout_constraintStart_toEndOf="@id/tv_timer"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="27dp"
+                android:max="15"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+        <com.blifeinc.pinch_game.OutLineTextView
+            android:id="@+id/tv_count_guid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/layout_countdown"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:text="탭 수"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="4"/>
+
+
+        <com.blifeinc.pinch_game.OutLineTextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_count_guid"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="7dp"
+            android:textSize="33sp"
+            android:textColor="@color/white"
+            android:text="0"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6"/>
+
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_15sec"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="11dp"
+            android:background="@drawable/round_small_blue_btn"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:text="15초"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_10sec"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_15sec"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/round_small_skyblue_btn"
+            android:textColor="@color/dark_grey_blue"
+            android:textSize="17sp"
+            android:text="10초"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_5sec"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_10sec"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/round_small_skyblue_btn"
+            android:textColor="@color/dark_grey_blue"
+            android:textSize="17sp"
+            android:text="5초"/>
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_start"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="13dp"
+            android:background="@drawable/select_btn"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:text="시작"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="13dp"
+            android:background="@drawable/select_btn"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:text="전송"/>
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_show_chart"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="13dp"
+            android:background="@drawable/select_btn"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:text="차트 보기"
+            android:visibility="invisible"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_delay_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="80sp"
+            android:text="3"
+            android:visibility="gone"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+        <WebView
+            android:id="@+id/view_web_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_close_web"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_baseline_chevron_left_24"/>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
