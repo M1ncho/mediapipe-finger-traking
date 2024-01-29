@@ -122,7 +122,9 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                 )
 
                 //Log.d(TAG, "timestamp 확인 | $timestamp")
-                Log.d(TAG, "timestamp convert 확인 | $timeChange   $test")
+                //Log.d(TAG, "timestamp convert 확인 | $timeChange   $test")
+
+                Log.d(TAG, "손가락 위치값 확인 | $saveData")
 
                 trackActivity.getTappingDetail(saveData)
             }
