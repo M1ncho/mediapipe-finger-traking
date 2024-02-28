@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RoundSelectActivity">
+
+
+
+    <TextView
+        android:id="@+id/tv_round_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="회차 설정"/>
+
+
+    <TextView
+        android:id="@+id/tv_round_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_round_title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="30dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="회차 선택"/>
+
+
+    
+    <TextView
+        android:id="@+id/tv_one_round"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_round_select"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="1회차"
+        android:background="@drawable/round_line_blue_layout"/>
+    
+    <TextView
+        android:id="@+id/tv_two_round"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_one_round"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="2회차"
+        android:background="@drawable/round_line_blue_layout"/>
+
+
+    <TextView
+        android:id="@+id/tv_three_round"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_two_round"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="3회차"
+        android:background="@drawable/round_line_blue_layout"/>
+
+
+    <TextView
+        android:id="@+id/tv_four_round"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_three_round"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="4회차"
+        android:background="@drawable/round_line_blue_layout"/>
+
+
+
+
+
+
+    <TextView
+        android:id="@+id/tv_check"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="확인"
+        android:background="@color/dark_royal_blue"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

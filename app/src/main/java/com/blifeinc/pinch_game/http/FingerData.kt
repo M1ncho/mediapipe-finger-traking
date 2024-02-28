@@ -5,5 +5,6 @@ data class FingerData (
     var tapping_number: Int,
     var hand_type: Int,
     var finger_max_height: Int,
-    var finger_data_details: List<FingerDataDetail>
+    var finger_data_details: List<FingerDataDetail>,
+    var round: Int
 )

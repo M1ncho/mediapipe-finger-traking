@@ -9,6 +9,7 @@ class SaveSettingUtil {
         const val MEMBER_ID = "member_id"
         const val TAPPING_COUNT = "tapping_count"
         const val HAND_TYPE = "hand_type"
+        const val ROUND = "round"
 
 
         // 선택한 멤버 아이디 저장
@@ -27,7 +28,6 @@ class SaveSettingUtil {
         }
 
 
-
         // 선택한 손의 위치 저장
         fun setHandType(context: Context, value: Int) {
             val pref = context.getSharedPreferences(context.getString(R.string.shared_name), Context.MODE_PRIVATE)
@@ -43,6 +43,21 @@ class SaveSettingUtil {
             return pref.getInt(HAND_TYPE, 0)
         }
 
+
+        // 선택한 회차 저장
+        fun setRound(context: Context, value: Int) {
+            val pref = context.getSharedPreferences(context.getString(R.string.shared_name), Context.MODE_PRIVATE)
+
+            val editor = pref.edit()
+            editor.putInt(ROUND, value)
+            editor.apply()
+        }
+
+        fun getRound(context: Context): Int {
+            val pref = context.getSharedPreferences(context.getString(R.string.shared_name), Context.MODE_PRIVATE)
+
+            return pref.getInt(ROUND, 0)
+        }
 
     }
 

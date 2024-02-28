@@ -35,6 +35,8 @@ class HandTrackingActivity : AppCompatActivity() {
     var now_hand = "right"
     var startAbsY = 0
 
+    var rounds = 0
+
     var cookieManager: CookieManager? = null
     val baseUrl = "http://med.blifeinc.com/manager/fingerdata/chart/"
     var chartURL = ""
@@ -119,6 +121,8 @@ class HandTrackingActivity : AppCompatActivity() {
         TedPermission.create().setPermissionListener(permissionListener).setPermissions(*REQUIRED_PERMISSIONS).check()
 
         dataService = FingertappingClient.instance().create(DataService::class.java)
+
+        rounds = SaveSettingUtil.getRound(this)
 
 
         binding.tvLeft.setOnClickListener {
@@ -420,7 +424,8 @@ class HandTrackingActivity : AppCompatActivity() {
                 tapping_number = count,
                 hand_type = SaveSettingUtil.getHandType(this),
                 finger_max_height = startAbsY,
-                finger_data_details = tappingList
+                finger_data_details = tappingList,
+                round = rounds
         )
 
         val dataPost = dataService.uploadTapData(saveData)

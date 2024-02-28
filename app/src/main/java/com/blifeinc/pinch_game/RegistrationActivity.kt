@@ -2,14 +2,16 @@ package com.blifeinc.pinch_game
 
 import android.Manifest
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.blifeinc.pinch_game.databinding.ActivityRegistrationBinding
-import com.blifeinc.pinch_game.http.*
+import com.blifeinc.pinch_game.http.FingertappingClient
+import com.blifeinc.pinch_game.http.Member
+import com.blifeinc.pinch_game.http.MemberList
+import com.blifeinc.pinch_game.http.MemberService
 import com.blifeinc.pinch_game.util.SaveSettingUtil
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
@@ -77,7 +79,9 @@ class RegistrationActivity : AppCompatActivity() {
                 val id = memberList[position].member_id
                 SaveSettingUtil.setMemberId(this@RegistrationActivity, id)
 
-                val intent = Intent(this@RegistrationActivity, HandTrackingActivity::class.java)
+                //val intent = Intent(this@RegistrationActivity, HandTrackingActivity::class.java)
+                val intent = Intent(this@RegistrationActivity, RoundSelectActivity::class.java)
+
                 startActivity(intent)
             }
         }
