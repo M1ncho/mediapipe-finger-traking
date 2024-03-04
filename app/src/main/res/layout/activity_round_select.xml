@@ -97,8 +97,6 @@
 
 
 
-
-
     <TextView
         android:id="@+id/tv_check"
         android:layout_width="match_parent"

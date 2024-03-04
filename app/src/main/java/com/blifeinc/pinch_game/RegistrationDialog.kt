@@ -47,6 +47,7 @@ class RegistrationDialog(val context: Context) {
         val edPatient = dialog.findViewById<EditText>(R.id.ed_patient)
         val closeArea = dialog.findViewById<RelativeLayout>(R.id.rl_close)
 
+        val gradeZero = dialog.findViewById<TextView>(R.id.tv_grade_0)
         val gradeOne = dialog.findViewById<TextView>(R.id.tv_grade_1)
         val gradeTwo = dialog.findViewById<TextView>(R.id.tv_grade_2)
         val gradeThree = dialog.findViewById<TextView>(R.id.tv_grade_3)
@@ -70,24 +71,28 @@ class RegistrationDialog(val context: Context) {
         }
 
 
+        gradeZero.setOnClickListener {
+            selectGrade(0, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+        }
+
         gradeOne.setOnClickListener {
-            selectGrade(1, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+            selectGrade(1, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
         }
 
         gradeTwo.setOnClickListener {
-            selectGrade(2, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+            selectGrade(2, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
         }
 
         gradeThree.setOnClickListener {
-            selectGrade(3, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+            selectGrade(3, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
         }
 
         gradeFour.setOnClickListener {
-            selectGrade(4, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+            selectGrade(4, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
         }
 
         gradeFive.setOnClickListener {
-            selectGrade(5, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
+            selectGrade(5, gradeZero, gradeOne, gradeTwo, gradeThree, gradeFour, gradeFive)
         }
 
 
@@ -158,10 +163,10 @@ class RegistrationDialog(val context: Context) {
                     val id = response.body()!!.member_id
                     SaveSettingUtil.setMemberId(dialog.context, id)
 
-                    //val intent = Intent(dialog.context, HandTrackingActivity::class.java)
                     val intent = Intent(dialog.context, RoundSelectActivity::class.java)
-
                     dialog.context.startActivity(intent)
+
+                    dialog.dismiss()
                 }
             }
             override fun onFailure(call: Call<ResultResponse>, t: Throwable) {
@@ -174,10 +179,27 @@ class RegistrationDialog(val context: Context) {
 
 
     // 등급 선택 표시 함수
-    fun selectGrade(grade: Int, tvOne: TextView, tvTwo: TextView, tvThree: TextView, tvFour: TextView, tvFive: TextView) {
+    fun selectGrade(grade: Int, tvZero: TextView, tvOne: TextView, tvTwo: TextView, tvThree: TextView, tvFour: TextView, tvFive: TextView) {
         severityGrade = grade
 
-        if (grade == 1) {
+        if (grade == 0) {
+            tvZero.setBackgroundResource(R.drawable.round_small_blue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.white))
+            tvOne.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvOne.setTextColor(ContextCompat.getColor(context, R.color.black))
+            tvTwo.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvTwo.setTextColor(ContextCompat.getColor(context, R.color.black))
+            tvThree.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvThree.setTextColor(ContextCompat.getColor(context, R.color.black))
+            tvFour.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvFour.setTextColor(ContextCompat.getColor(context, R.color.black))
+            tvFive.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvFive.setTextColor(ContextCompat.getColor(context, R.color.black))
+        }
+
+        else if (grade == 1) {
+            tvZero.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvOne.setBackgroundResource(R.drawable.round_small_blue_btn)
             tvOne.setTextColor(ContextCompat.getColor(context, R.color.white))
             tvTwo.setBackgroundResource(R.drawable.round_small_skyblue_btn)
@@ -190,6 +212,8 @@ class RegistrationDialog(val context: Context) {
             tvFive.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
         else if (grade == 2) {
+            tvZero.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvOne.setBackgroundResource(R.drawable.round_small_skyblue_btn)
             tvOne.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvTwo.setBackgroundResource(R.drawable.round_small_blue_btn)
@@ -202,6 +226,8 @@ class RegistrationDialog(val context: Context) {
             tvFive.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
         else if (grade == 3) {
+            tvZero.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvOne.setBackgroundResource(R.drawable.round_small_skyblue_btn)
             tvOne.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvTwo.setBackgroundResource(R.drawable.round_small_skyblue_btn)
@@ -214,6 +240,8 @@ class RegistrationDialog(val context: Context) {
             tvFive.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
         else if (grade == 4) {
+            tvZero.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvOne.setBackgroundResource(R.drawable.round_small_skyblue_btn)
             tvOne.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvTwo.setBackgroundResource(R.drawable.round_small_skyblue_btn)
@@ -226,6 +254,8 @@ class RegistrationDialog(val context: Context) {
             tvFive.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
         else {
+            tvZero.setBackgroundResource(R.drawable.round_small_skyblue_btn)
+            tvZero.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvOne.setBackgroundResource(R.drawable.round_small_skyblue_btn)
             tvOne.setTextColor(ContextCompat.getColor(context, R.color.black))
             tvTwo.setBackgroundResource(R.drawable.round_small_skyblue_btn)

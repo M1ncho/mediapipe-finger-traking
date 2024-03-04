@@ -32,10 +32,10 @@ class HandTrackingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHandTrackingBinding
 
     var count = 0
-    var now_hand = "right"
     var startAbsY = 0
-
     var rounds = 0
+    var leftPostYn = false
+    var rightPostYn = false
 
     var cookieManager: CookieManager? = null
     val baseUrl = "http://med.blifeinc.com/manager/fingerdata/chart/"
@@ -125,16 +125,6 @@ class HandTrackingActivity : AppCompatActivity() {
         rounds = SaveSettingUtil.getRound(this)
 
 
-        binding.tvLeft.setOnClickListener {
-            now_hand = "left"
-            changeHand()
-        }
-
-        binding.tvRight.setOnClickListener {
-            now_hand = "right"
-            changeHand()
-        }
-
 
         binding.btn15sec.setOnClickListener {
             changeTime(15)
@@ -149,33 +139,21 @@ class HandTrackingActivity : AppCompatActivity() {
         }
 
 
+        //SaveSettingUtil.setSelectYn(this, 0)
+
         binding.btnStart.setOnClickListener {
-            if (!isPlay) {
-                tappingList.clear()
-                count = 0
-                binding.tvCount.text = "$count"
-
-                is3sec = true
-
-                binding.btnStart.text = "중지"
-                binding.btnStart.visibility = View.INVISIBLE
-                binding.btnSave.visibility = View.INVISIBLE
-                binding.btn15sec.visibility = View.INVISIBLE
-                binding.btn10sec.visibility = View.INVISIBLE
-                binding.btn5sec.visibility = View.INVISIBLE
-
-                if (sendDataYN) {
-                    binding.btnShowChart.visibility = View.INVISIBLE
-                }
-
-
-                binding.tvDelayCount.visibility = View.VISIBLE
-                sCountDown.start()
+            if (leftPostYn && rightPostYn) {
+                SaveSettingUtil.setSelectYn(this, 0)
+                finish()
             }
             else {
-                isPaused = false
-                isCancelled = true
-                isPlay = false
+                if (SaveSettingUtil.getSelectYn(this) == 0) {
+                    val dialog = HandSelectDialog(this, leftPostYn, rightPostYn)
+                    dialog.showDialog()
+                }
+                else {
+                    tappingStart()
+                }
             }
         }
 
@@ -211,6 +189,14 @@ class HandTrackingActivity : AppCompatActivity() {
             binding.layoutWeb.visibility = View.GONE
         }
 
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        SaveSettingUtil.setSelectYn(this, 0)
     }
 
 
@@ -264,38 +250,6 @@ class HandTrackingActivity : AppCompatActivity() {
         )
     }
 
-
-
-    // 손 바꾸기
-    fun changeHand() {
-        if (now_hand == "right") {
-            binding.tvRight.setBackgroundResource(R.color.dark_royal_blue)
-            binding.tvRight.setTextColor(ContextCompat.getColor(this, R.color.white))
-
-            binding.tvLeft.setBackgroundResource(R.color.carolina_blue)
-            binding.tvLeft.setTextColor(ContextCompat.getColor(this, R.color.dark_grey_blue))
-
-            SaveSettingUtil.setHandType(this, 0)
-        }
-        else {
-            binding.tvLeft.setBackgroundResource(R.color.dark_royal_blue)
-            binding.tvLeft.setTextColor(ContextCompat.getColor(this, R.color.white))
-
-            binding.tvRight.setBackgroundResource(R.color.carolina_blue)
-            binding.tvRight.setTextColor(ContextCompat.getColor(this, R.color.dark_grey_blue))
-
-            SaveSettingUtil.setHandType(this, 1)
-        }
-
-        resetCount()
-
-        // 만약 동작중인 timer 존재 시, timer 멈추기
-        if (isPlay) {
-            isPaused = false
-            isCancelled = true
-            isPlay = false
-        }
-    }
 
 
 
@@ -399,6 +353,39 @@ class HandTrackingActivity : AppCompatActivity() {
     }
 
 
+    // 태핑 테스트 시작
+    fun tappingStart() {
+        if (!isPlay) {
+            tappingList.clear()
+            count = 0
+            binding.tvCount.text = "$count"
+
+            is3sec = true
+
+            binding.btnStart.text = "중지"
+            binding.btnStart.visibility = View.INVISIBLE
+            binding.btnSave.visibility = View.INVISIBLE
+            binding.btn15sec.visibility = View.INVISIBLE
+            binding.btn10sec.visibility = View.INVISIBLE
+            binding.btn5sec.visibility = View.INVISIBLE
+
+            if (sendDataYN) {
+                binding.btnShowChart.visibility = View.INVISIBLE
+            }
+
+            binding.tvDelayCount.visibility = View.VISIBLE
+            sCountDown.start()
+        }
+        else {
+            isPaused = false
+            isCancelled = true
+            isPlay = false
+        }
+    }
+
+
+
+
     // 처음 y값들 벌어진 거리의 절대값
     // 3초 준비시간인지 확인
     fun check3sec(): Boolean {
@@ -434,6 +421,8 @@ class HandTrackingActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@HandTrackingActivity, "전송을 완료했습니다.", Toast.LENGTH_SHORT).show()
 
+                    checkPostHandType()
+
                     runOnUiThread {
                         sendDataYN = true
                         binding.btnShowChart.visibility = View.VISIBLE
@@ -442,12 +431,41 @@ class HandTrackingActivity : AppCompatActivity() {
                     Log.d("Success Post Data ", "${response.body()!!.result}  $sendDataYN")
                 }
             }
-
             override fun onFailure(call: Call<SendResult>, t: Throwable) {
                 Log.d("Failed POST DATA ", "${t.message}")
             }
         })
     }
+
+
+    // 측정한 손의 데이터 유무 확인
+    fun checkPostHandType() {
+        if (SaveSettingUtil.getHandType(this@HandTrackingActivity) == 0) {
+            rightPostYn = true
+        }
+        else if (SaveSettingUtil.getHandType(this@HandTrackingActivity) == 1) {
+            leftPostYn = true
+        }
+
+        if (leftPostYn && rightPostYn) {
+            binding.btnStart.text = "목록보기"
+        }
+        else {
+            changeBtnText()
+        }
+
+        SaveSettingUtil.setSelectYn(this, 0)
+    }
+
+    fun changeBtnText() {
+        if (SaveSettingUtil.getSelectYn(this) == 0) {
+            binding.btnStart.text = "선택"
+        }
+        else if (SaveSettingUtil.getSelectYn(this) == 1) {
+            binding.btnStart.text = "시작"
+        }
+    }
+
 
 
 

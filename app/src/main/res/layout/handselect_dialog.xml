@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="320dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/round_layout">
+
+
+
+    <TextView
+        android:id="@+id/tv_guid_hand_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="19sp"
+        android:text="손 방향 선택"/>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_baseline_close_24"/>
+
+    </RelativeLayout>
+
+
+
+
+    <TextView
+        android:id="@+id/tv_left_hand"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_guid_hand_select"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="왼손"
+        android:background="@drawable/round_line_blue_layout"/>
+
+
+    <TextView
+        android:id="@+id/tv_right_hand"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_left_hand"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:text="오른손"
+        android:background="@drawable/round_line_blue_layout"/>
+
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_select_hand"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/round_blue_button"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="확인"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

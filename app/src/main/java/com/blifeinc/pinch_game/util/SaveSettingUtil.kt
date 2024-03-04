@@ -7,9 +7,10 @@ class SaveSettingUtil {
 
     companion object {
         const val MEMBER_ID = "member_id"
-        const val TAPPING_COUNT = "tapping_count"
         const val HAND_TYPE = "hand_type"
         const val ROUND = "round"
+        const val SELECT_YN = "select_yn"
+
 
 
         // 선택한 멤버 아이디 저장
@@ -58,6 +59,24 @@ class SaveSettingUtil {
 
             return pref.getInt(ROUND, 0)
         }
+
+
+        // 손 선택 유무 판단
+        // 0 - 미저장, 1 - 저장
+        fun setSelectYn(context: Context, value: Int) {
+            val pref = context.getSharedPreferences(context.getString(R.string.shared_name), Context.MODE_PRIVATE)
+
+            val editor = pref.edit()
+            editor.putInt(SELECT_YN, value)
+            editor.apply()
+        }
+
+        fun getSelectYn(context: Context): Int {
+            val pref = context.getSharedPreferences(context.getString(R.string.shared_name), Context.MODE_PRIVATE)
+
+            return pref.getInt(SELECT_YN, 0)
+        }
+
 
     }
 
