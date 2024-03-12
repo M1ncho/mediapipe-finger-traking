@@ -67,11 +67,20 @@ class RoundSelectActivity : AppCompatActivity() {
             else {
                 val intent = Intent(this, HandTrackingActivity::class.java)
                 startActivity(intent)
-                finish()
+                //finish()
             }
         }
 
     }
+
+
+    // tracking 이후 새로운 데이터 통신이 필여
+    override fun onResume() {
+        super.onResume()
+
+        getMemberData()
+    }
+
 
 
 
