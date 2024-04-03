@@ -81,17 +81,16 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                 drawHollowCircle(lm.x, lm.y, if (isLeftHand) LEFT_HAND_HOLLOW_CIRCLE_COLOR else RIGHT_HAND_HOLLOW_CIRCLE_COLOR)
             }
 
+            // 계산에 필요한 landmark value
+            val point1X = (result.multiHandLandmarks()[i].landmarkList[4].x * 100).toInt()
+            val point1Y = (result.multiHandLandmarks()[i].landmarkList[4].y * 100).toInt()
+            val point2X = (result.multiHandLandmarks()[i].landmarkList[8].x * 100).toInt()
+            val point2Y = (result.multiHandLandmarks()[i].landmarkList[8].y * 100).toInt()
 
-            var point1X = (result.multiHandLandmarks()[i].landmarkList[4].x * 100).toInt()
-            var point1Y = (result.multiHandLandmarks()[i].landmarkList[4].y * 100).toInt()
-            var point2X = (result.multiHandLandmarks()[i].landmarkList[8].x * 100).toInt()
-            var point2Y = (result.multiHandLandmarks()[i].landmarkList[8].y * 100).toInt()
+            val point1Z = (result.multiHandLandmarks()[i].landmarkList[4].z * 100)
+            val point2Z = (result.multiHandLandmarks()[i].landmarkList[8].z * 100)
 
-            var point1Z = (result.multiHandLandmarks()[i].landmarkList[4].z * 100)
-            var point2Z = (result.multiHandLandmarks()[i].landmarkList[8].z * 100)
-
-
-            //val interval_x = abs( point1X - point2X )
+            // 거리값 계산
             val interval_y = abs( point1Y - point2Y )
 
 
@@ -106,12 +105,11 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
 
             if (trackActivity?.isPlay == true) {
-                var timestamp = System.currentTimeMillis()
+                val timestamp = System.currentTimeMillis()
                 val timeChange = TimeConvert().convertTime(timestamp)
-                val test = TimeConvert().convertDateTime(timeChange)
+                //val test = TimeConvert().convertDateTime(timeChange)
 
-
-                var saveData = FingerDataDetail(
+                val saveData = FingerDataDetail(
                     time = timeChange,
                     thumb_x = point1X.toDouble(),
                     thumb_y = point1Y.toDouble(),
@@ -120,9 +118,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     index_y = point2Y.toDouble(),
                     index_z = point2Z.toDouble()
                 )
-
-                //Log.d(TAG, "timestamp 확인 | $timestamp")
-                //Log.d(TAG, "timestamp convert 확인 | $timeChange   $test")
 
                 Log.d(TAG, "손가락 위치값 확인 | $saveData")
 
@@ -133,7 +128,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
             // z의 값..을 같이 검사??
             // 유효거리 판단 -> 90% 이상??
-            // in->5  out->30
             if (interval_y <= inOkY) {
                 now_state = "in"
             }

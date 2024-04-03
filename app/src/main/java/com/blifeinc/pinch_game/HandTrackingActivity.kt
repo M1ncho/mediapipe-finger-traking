@@ -140,20 +140,13 @@ class HandTrackingActivity : AppCompatActivity() {
 
 
         //SaveSettingUtil.setSelectYn(this, 0)
-
         binding.btnStart.setOnClickListener {
-            if (leftPostYn && rightPostYn) {
-                SaveSettingUtil.setSelectYn(this, 0)
-                finish()
+            if (SaveSettingUtil.getSelectYn(this) == 0) {
+                val dialog = HandSelectDialog(this, leftPostYn, rightPostYn)
+                dialog.showDialog()
             }
             else {
-                if (SaveSettingUtil.getSelectYn(this) == 0) {
-                    val dialog = HandSelectDialog(this, leftPostYn, rightPostYn)
-                    dialog.showDialog()
-                }
-                else {
-                    tappingStart()
-                }
+                tappingStart()
             }
         }
 
@@ -188,9 +181,7 @@ class HandTrackingActivity : AppCompatActivity() {
         binding.ivCloseWeb.setOnClickListener {
             binding.layoutWeb.visibility = View.GONE
         }
-
     }
-
 
 
     override fun onDestroy() {
@@ -198,7 +189,6 @@ class HandTrackingActivity : AppCompatActivity() {
 
         SaveSettingUtil.setSelectYn(this, 0)
     }
-
 
 
 
@@ -303,14 +293,6 @@ class HandTrackingActivity : AppCompatActivity() {
         }
     }
 
-    fun resetCount() {
-        count = 0
-        tappingList.clear()
-
-        runOnUiThread {
-            binding.tvCount.text = "$count"
-        }
-    }
 
 
     // countdown 함수
