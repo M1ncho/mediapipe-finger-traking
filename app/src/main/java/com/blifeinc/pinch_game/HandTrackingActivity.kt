@@ -120,9 +120,11 @@ class HandTrackingActivity : AppCompatActivity() {
 
         TedPermission.create().setPermissionListener(permissionListener).setPermissions(*REQUIRED_PERMISSIONS).check()
 
+        //
         dataService = FingertappingClient.instance().create(DataService::class.java)
 
         rounds = SaveSettingUtil.getRound(this)
+        SaveSettingUtil.setSelectYn(this, 0)
 
 
 
@@ -142,10 +144,12 @@ class HandTrackingActivity : AppCompatActivity() {
         //SaveSettingUtil.setSelectYn(this, 0)
         binding.btnStart.setOnClickListener {
             if (SaveSettingUtil.getSelectYn(this) == 0) {
+                HandsResultGlRenderer().onePrint = false
                 val dialog = HandSelectDialog(this, leftPostYn, rightPostYn)
                 dialog.showDialog()
             }
             else {
+                //HandsResultGlRenderer().onePrint = false
                 tappingStart()
             }
         }
@@ -376,7 +380,8 @@ class HandTrackingActivity : AppCompatActivity() {
 
     fun getIntervalY(y: Int) {
         startAbsY = y
-        //Log.d("START ", "첫 y 위치값의 절대값 : $startAbsY ")
+
+        Log.d("START ", "첫 y 위치값의 절대값 : $startAbsY ")
     }
 
     // list 저장

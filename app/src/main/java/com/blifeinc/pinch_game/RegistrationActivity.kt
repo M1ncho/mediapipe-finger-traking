@@ -107,8 +107,8 @@ class RegistrationActivity : AppCompatActivity() {
 
                     setAdapter(memberList, useDataList)
 
-                    Log.d("DATA CHECK ", "$memberList  $size")
-                    Log.d("DATA CHECK 22 ", "$useDataList")
+                    //Log.d("DATA CHECK ", "$memberList  $size")
+                    //Log.d("DATA CHECK 22 ", "$useDataList")
                 }
             }
             override fun onFailure(call: Call<MemberList>, t: Throwable) {

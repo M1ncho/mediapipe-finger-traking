@@ -82,6 +82,13 @@ class RoundSelectActivity : AppCompatActivity() {
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        SaveSettingUtil.setSelectYn(this, 0)
+    }
+
+
 
 
 

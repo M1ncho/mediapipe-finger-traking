@@ -3,6 +3,8 @@ package com.blifeinc.pinch_game
 import android.opengl.GLES20
 import android.util.Log
 import com.blifeinc.pinch_game.http.FingerDataDetail
+import com.blifeinc.pinch_game.http.MaxData
+import com.blifeinc.pinch_game.util.SaveSettingUtil
 import com.blifeinc.pinch_game.util.TimeConvert
 import com.google.mediapipe.formats.proto.LandmarkProto
 import com.google.mediapipe.solutioncore.ResultGlRenderer
@@ -29,7 +31,10 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
     var countOkY = 0
     var inOkY = 0
 
+    var onePrint = false
+    var maxList = mutableListOf<MaxData>()
     //private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.zzz")
+
 
     private fun loadShader(type: Int, shaderCode: String): Int {
         val shader = GLES20.glCreateShader(type)
@@ -90,24 +95,151 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             val point1Z = (result.multiHandLandmarks()[i].landmarkList[4].z * 100)
             val point2Z = (result.multiHandLandmarks()[i].landmarkList[8].z * 100)
 
+
+            // 이외의 landmark value
+            val wristX = (result.multiHandLandmarks()[i].landmarkList[0].x * 100)
+            val wristY = (result.multiHandLandmarks()[i].landmarkList[0].y * 100)
+            val wristZ = (result.multiHandLandmarks()[i].landmarkList[0].z * 100)
+
+            val thumbCX = (result.multiHandLandmarks()[i].landmarkList[1].x * 100)
+            val thumbCY = (result.multiHandLandmarks()[i].landmarkList[1].y * 100)
+            val thumbCZ = (result.multiHandLandmarks()[i].landmarkList[1].z * 100)
+            val thumbMX = (result.multiHandLandmarks()[i].landmarkList[2].x * 100)
+            val thumbMY = (result.multiHandLandmarks()[i].landmarkList[2].y * 100)
+            val thumbMZ = (result.multiHandLandmarks()[i].landmarkList[2].z * 100)
+            val thumbIX = (result.multiHandLandmarks()[i].landmarkList[3].x * 100)
+            val thumbIY = (result.multiHandLandmarks()[i].landmarkList[3].y * 100)
+            val thumbIZ = (result.multiHandLandmarks()[i].landmarkList[3].z * 100)
+
+            val indexMX = (result.multiHandLandmarks()[i].landmarkList[5].x * 100)
+            val indexMY = (result.multiHandLandmarks()[i].landmarkList[5].y * 100)
+            val indexMZ = (result.multiHandLandmarks()[i].landmarkList[5].z * 100)
+            val indexPX = (result.multiHandLandmarks()[i].landmarkList[6].x * 100)
+            val indexPY = (result.multiHandLandmarks()[i].landmarkList[6].y * 100)
+            val indexPZ = (result.multiHandLandmarks()[i].landmarkList[6].z * 100)
+            val indexDX = (result.multiHandLandmarks()[i].landmarkList[7].x * 100)
+            val indexDY = (result.multiHandLandmarks()[i].landmarkList[7].y * 100)
+            val indexDZ = (result.multiHandLandmarks()[i].landmarkList[7].z * 100)
+
+            val middleMX = (result.multiHandLandmarks()[i].landmarkList[9].x * 100)
+            val middleMY = (result.multiHandLandmarks()[i].landmarkList[9].y * 100)
+            val middleMZ = (result.multiHandLandmarks()[i].landmarkList[9].z * 100)
+            val middlePX = (result.multiHandLandmarks()[i].landmarkList[10].x * 100)
+            val middlePY = (result.multiHandLandmarks()[i].landmarkList[10].y * 100)
+            val middlePZ = (result.multiHandLandmarks()[i].landmarkList[10].z * 100)
+            val middleDX = (result.multiHandLandmarks()[i].landmarkList[11].x * 100)
+            val middleDY = (result.multiHandLandmarks()[i].landmarkList[11].y * 100)
+            val middleDZ = (result.multiHandLandmarks()[i].landmarkList[11].z * 100)
+            val middleTX = (result.multiHandLandmarks()[i].landmarkList[12].x * 100)
+            val middleTY = (result.multiHandLandmarks()[i].landmarkList[12].y * 100)
+            val middleTZ = (result.multiHandLandmarks()[i].landmarkList[12].z * 100)
+
+            val ringMX = (result.multiHandLandmarks()[i].landmarkList[13].x * 100)
+            val ringMY = (result.multiHandLandmarks()[i].landmarkList[13].y * 100)
+            val ringMZ = (result.multiHandLandmarks()[i].landmarkList[13].z * 100)
+            val ringPX = (result.multiHandLandmarks()[i].landmarkList[14].x * 100)
+            val ringPY = (result.multiHandLandmarks()[i].landmarkList[14].y * 100)
+            val ringPZ = (result.multiHandLandmarks()[i].landmarkList[14].z * 100)
+            val ringDX = (result.multiHandLandmarks()[i].landmarkList[15].x * 100)
+            val ringDY = (result.multiHandLandmarks()[i].landmarkList[15].y * 100)
+            val ringDZ = (result.multiHandLandmarks()[i].landmarkList[15].z * 100)
+            val ringTX = (result.multiHandLandmarks()[i].landmarkList[16].x * 100)
+            val ringTY = (result.multiHandLandmarks()[i].landmarkList[16].y * 100)
+            val ringTZ = (result.multiHandLandmarks()[i].landmarkList[16].z * 100)
+
+            val pinkyMX = (result.multiHandLandmarks()[i].landmarkList[17].x * 100)
+            val pinkyMY = (result.multiHandLandmarks()[i].landmarkList[17].y * 100)
+            val pinkyMZ = (result.multiHandLandmarks()[i].landmarkList[17].z * 100)
+            val pinkyPX = (result.multiHandLandmarks()[i].landmarkList[18].x * 100)
+            val pinkyPY = (result.multiHandLandmarks()[i].landmarkList[18].y * 100)
+            val pinkyPZ = (result.multiHandLandmarks()[i].landmarkList[18].z * 100)
+            val pinkyDX = (result.multiHandLandmarks()[i].landmarkList[19].x * 100)
+            val pinkyDY = (result.multiHandLandmarks()[i].landmarkList[19].y * 100)
+            val pinkyDZ = (result.multiHandLandmarks()[i].landmarkList[19].z * 100)
+            val pinkyTX = (result.multiHandLandmarks()[i].landmarkList[20].x * 100)
+            val pinkyTY = (result.multiHandLandmarks()[i].landmarkList[20].y * 100)
+            val pinkyTZ = (result.multiHandLandmarks()[i].landmarkList[20].z * 100)
+
+
+
             // 거리값 계산
             val interval_y = abs( point1Y - point2Y )
 
 
-            // 초기 y 좌표들의 거리값 저장 부분
+            // 초기 y 좌표들의 거리값 저장 부분 - 3sec 준비 시간 시점
             if (trackActivity?.check3sec() == true) {
+                onePrint = false
+
                 startY = interval_y
                 countOkY = ((startY.toFloat() / 10) * 9).toInt()
                 inOkY = startY / 10
+
+                // log 출력용 - 초기 거리값, 계산한 카운트 초기값
+                val maxData = MaxData(
+                    max_height = startY,
+                    difference = countOkY
+                )
+                maxList.add(maxData)
 
                 trackActivity.getIntervalY(interval_y)
             }
 
 
+
+            // 본 태핑 시작 시점
             if (trackActivity?.isPlay == true) {
+                if (!onePrint) {
+                    var sumMax = 0
+                    var sumDiffer = 0
+                    val list = mutableListOf<MaxData>()
+
+                    // 평균값 계산
+                    for (data in maxList) {
+                        sumMax += data.max_height
+                        sumDiffer += data.difference
+                    }
+
+
+                    // 값 쳐내기
+                    for (item in maxList) {
+                        if (item.max_height < percentValue(sumMax/maxList.size.toDouble(), 5.0)) {
+                            val deleteData = MaxData(
+                                max_height = item.max_height,
+                                difference = item.difference
+                            )
+                            list.add(deleteData)
+                        }
+                    }
+                    maxList.removeAll(list)
+                    Log.d("Delete Value", "$list")
+
+
+                    // 기준값 다시 계산 - max 값 가져오기??
+                    var newMax = 0
+
+                    for (data in maxList) {
+                        if (newMax < data.max_height) {
+                            newMax = data.max_height
+                        }
+                    }
+
+
+                    startY = newMax
+                    countOkY = ((startY.toFloat() / 10) * 9).toInt()
+                    inOkY = startY / 10
+
+                    // sumDiffer / maxList.size
+
+                    Log.d("Data Value", "$startY :: $countOkY :: $inOkY")
+                    trackActivity.getIntervalY(newMax)
+
+                    onePrint = true
+                }
+
+
+
                 val timestamp = System.currentTimeMillis()
                 val timeChange = TimeConvert().convertTime(timestamp)
-                //val test = TimeConvert().convertDateTime(timeChange)
 
                 val saveData = FingerDataDetail(
                     time = timeChange,
@@ -118,8 +250,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     index_y = point2Y.toDouble(),
                     index_z = point2Z.toDouble()
                 )
-
-                Log.d(TAG, "손가락 위치값 확인 | $saveData")
+                //Log.d(TAG, "손가락 위치값 확인 | $saveData")
 
                 trackActivity.getTappingDetail(saveData)
             }
@@ -144,6 +275,13 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
         }
     }
 
+
+
+    //퍼센트값 구하기
+    fun percentValue(sum: Double, percent: Double): Double {
+        val result = sum / 100 * percent
+        return  result
+    }
 
 
 
