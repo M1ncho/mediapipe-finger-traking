@@ -234,6 +234,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     trackActivity.getIntervalY(newMax)
 
                     onePrint = true
+                    maxList.clear()
                 }
 
 
