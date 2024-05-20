@@ -381,13 +381,27 @@ class HandTrackingActivity : AppCompatActivity() {
     fun getIntervalY(y: Int) {
         startAbsY = y
 
-        Log.d("START ", "첫 y 위치값의 절대값 : $startAbsY ")
+        //Log.d("START ", "첫 y 위치값의 절대값 : $startAbsY ")
     }
 
     // list 저장
     fun getTappingDetail(data: FingerDataDetail) {
         tappingList.add(data)
     }
+
+
+    // 가이드 문구 보이기
+    fun showGuidLine(show: Boolean) {
+        runOnUiThread {
+            if (show) {
+                binding.tvGuidText.visibility = View.VISIBLE
+            }
+            else {
+                binding.tvGuidText.visibility = View.INVISIBLE
+            }
+        }
+    }
+
 
 
 

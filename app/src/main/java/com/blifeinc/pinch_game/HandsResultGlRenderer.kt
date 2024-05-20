@@ -1,6 +1,7 @@
 package com.blifeinc.pinch_game
 
 import android.opengl.GLES20
+import android.os.Looper
 import android.util.Log
 import com.blifeinc.pinch_game.http.FingerDataDetail
 import com.blifeinc.pinch_game.http.MaxData
@@ -13,6 +14,7 @@ import com.google.mediapipe.solutions.hands.HandsResult
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.text.SimpleDateFormat
+import java.util.logging.Handler
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
@@ -164,6 +166,19 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
             // 거리값 계산
             val interval_y = abs( point1Y - point2Y )
+            Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
+
+
+            // 거리 기준 가이드 - 기준치 10~20까지 값
+            if (trackActivity?.isPlay != true && trackActivity?.check3sec() != true) {
+                if (point1Y - point2Y < 18 ) {
+                    trackActivity?.showGuidLine(true)
+                }
+                else {
+                    trackActivity?.showGuidLine(false)
+                }
+            }
+
 
 
             // 초기 y 좌표들의 거리값 저장 부분 - 3sec 준비 시간 시점
@@ -202,7 +217,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
                     // 값 쳐내기
                     for (item in maxList) {
-                        if (item.max_height < percentValue(sumMax/maxList.size.toDouble(), 5.0)) {
+                        if (item.max_height <= percentValue(sumMax/maxList.size.toDouble(), 5.0)) {
                             val deleteData = MaxData(
                                 max_height = item.max_height,
                                 difference = item.difference
@@ -211,7 +226,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                         }
                     }
                     maxList.removeAll(list)
-                    Log.d("Delete Value", "$list")
+                    //Log.d("Delete Value", "$list")
 
 
                     // 기준값 다시 계산 - max 값 가져오기??
@@ -223,12 +238,10 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                         }
                     }
 
-
                     startY = newMax
                     countOkY = ((startY.toFloat() / 10) * 9).toInt()
                     inOkY = startY / 10
 
-                    // sumDiffer / maxList.size
 
                     Log.d("Data Value", "$startY :: $countOkY :: $inOkY")
                     trackActivity.getIntervalY(newMax)
