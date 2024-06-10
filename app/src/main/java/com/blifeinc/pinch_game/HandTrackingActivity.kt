@@ -55,6 +55,7 @@ class HandTrackingActivity : AppCompatActivity() {
     // 서버통신 관련
     private lateinit var dataService: DataService
     private var tappingList = mutableListOf<FingerDataDetail>()
+    private var fingerDataList = mutableListOf<Finger3DDataDetail>()
 
 
     // mediapipe 에 들어가있는
@@ -157,7 +158,8 @@ class HandTrackingActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             Log.d("DATA CHECK ", "${tappingList.size}   $tappingList")
-            sendTappingDate()
+            //sendTappingDate()
+            sendFinger3DData()
         }
 
 
@@ -389,6 +391,12 @@ class HandTrackingActivity : AppCompatActivity() {
         tappingList.add(data)
     }
 
+    // list 저장 - all landmark
+    fun getFingerDataDetail(data: Finger3DDataDetail) {
+        fingerDataList.add(data)
+    }
+
+
 
     // 가이드 문구 보이기
     fun showGuidLine(show: Boolean) {
@@ -417,6 +425,38 @@ class HandTrackingActivity : AppCompatActivity() {
         )
 
         val dataPost = dataService.uploadTapData(saveData)
+        dataPost.enqueue(object : Callback<SendResult> {
+            override fun onResponse(call: Call<SendResult>, response: Response<SendResult>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(this@HandTrackingActivity, "전송을 완료했습니다.", Toast.LENGTH_SHORT).show()
+
+                    checkPostHandType()
+
+                    runOnUiThread {
+                        sendDataYN = true
+                        binding.btnShowChart.visibility = View.VISIBLE
+                    }
+
+                    Log.d("Success Post Data ", "${response.body()!!.result}  $sendDataYN")
+                }
+            }
+            override fun onFailure(call: Call<SendResult>, t: Throwable) {
+                Log.d("Failed POST DATA ", "${t.message}")
+            }
+        })
+    }
+
+    fun sendFinger3DData() {
+        var sendData = Finger3DData(
+            member_id = SaveSettingUtil.getMemberId(this),
+            tapping_number = count,
+            hand_type = SaveSettingUtil.getHandType(this),
+            finger_max_height = startAbsY,
+            finger_data_details = fingerDataList,
+            round = rounds
+        )
+
+        val dataPost = dataService.upload3DData(sendData)
         dataPost.enqueue(object : Callback<SendResult> {
             override fun onResponse(call: Call<SendResult>, response: Response<SendResult>) {
                 if (response.isSuccessful) {

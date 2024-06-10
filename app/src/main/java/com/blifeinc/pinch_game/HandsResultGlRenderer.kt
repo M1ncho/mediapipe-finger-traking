@@ -3,6 +3,7 @@ package com.blifeinc.pinch_game
 import android.opengl.GLES20
 import android.os.Looper
 import android.util.Log
+import com.blifeinc.pinch_game.http.Finger3DDataDetail
 import com.blifeinc.pinch_game.http.FingerDataDetail
 import com.blifeinc.pinch_game.http.MaxData
 import com.blifeinc.pinch_game.util.SaveSettingUtil
@@ -97,7 +98,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             val point1Z = (result.multiHandLandmarks()[i].landmarkList[4].z * 100)
             val point2Z = (result.multiHandLandmarks()[i].landmarkList[8].z * 100)
 
-
             // 이외의 landmark value
             val wristX = (result.multiHandLandmarks()[i].landmarkList[0].x * 100)
             val wristY = (result.multiHandLandmarks()[i].landmarkList[0].y * 100)
@@ -166,7 +166,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
             // 거리값 계산
             val interval_y = abs( point1Y - point2Y )
-            Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
+            //Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
 
 
             // 거리 기준 가이드 - 기준치 10~20까지 값
@@ -243,13 +243,12 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     inOkY = startY / 10
 
 
-                    Log.d("Data Value", "$startY :: $countOkY :: $inOkY")
+                    //Log.d("Data Value", "$startY :: $countOkY :: $inOkY")
                     trackActivity.getIntervalY(newMax)
 
                     onePrint = true
                     maxList.clear()
                 }
-
 
 
                 val timestamp = System.currentTimeMillis()
@@ -264,9 +263,79 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     index_y = point2Y.toDouble(),
                     index_z = point2Z.toDouble()
                 )
+
+                val fingerData = Finger3DDataDetail(
+                    time = timeChange,
+                    wrist_x = wristX.toDouble(),
+                    wrist_y = wristY.toDouble(),
+                    wrist_z = wristZ.toDouble(),
+                    thumb_cmc_x = thumbCX.toDouble(),
+                    thumb_cmc_y = thumbCY.toDouble(),
+                    thumb_cmc_z = thumbCZ.toDouble(),
+                    thumb_mcp_x = thumbMX.toDouble(),
+                    thumb_mcp_y = thumbMY.toDouble(),
+                    thumb_mcp_z = thumbMZ.toDouble(),
+                    thumb_ip_x = thumbIX.toDouble(),
+                    thumb_ip_y = thumbIY.toDouble(),
+                    thumb_ip_z = thumbIZ.toDouble(),
+                    thumb_tip_x = point1X.toDouble(),
+                    thumb_tip_y = point1Y.toDouble(),
+                    thumb_tip_z = point1Z.toDouble(),
+                    index_finger_mcp_x = indexMX.toDouble(),
+                    index_finger_mcp_y = indexMY.toDouble(),
+                    index_finger_mcp_z = indexMZ.toDouble(),
+                    index_finger_pip_x = indexPX.toDouble(),
+                    index_finger_pip_y = indexPY.toDouble(),
+                    index_finger_pip_z = indexPZ.toDouble(),
+                    index_finger_dip_x = indexDX.toDouble(),
+                    index_finger_dip_y = indexDY.toDouble(),
+                    index_finger_dip_z = indexDZ.toDouble(),
+                    index_finger_tip_x = point2X.toDouble(),
+                    index_finger_tip_y = point2Y.toDouble(),
+                    index_finger_tip_z = point2Z.toDouble(),
+                    middle_finger_mcp_x = middleMX.toDouble(),
+                    middle_finger_mcp_y = middleMY.toDouble(),
+                    middle_finger_mcp_z = middleMZ.toDouble(),
+                    middle_finger_pip_x = middlePX.toDouble(),
+                    middle_finger_pip_y = middlePY.toDouble(),
+                    middle_finger_pip_z = middlePZ.toDouble(),
+                    middle_finger_dip_x = middleDX.toDouble(),
+                    middle_finger_dip_y = middleDY.toDouble(),
+                    middle_finger_dip_z = middleDZ.toDouble(),
+                    middle_finger_tip_x = middleTX.toDouble(),
+                    middle_finger_tip_y = middleTY.toDouble(),
+                    middle_finger_tip_z = middleTZ.toDouble(),
+                    ring_finger_mcp_x = ringMX.toDouble(),
+                    ring_finger_mcp_y = ringMY.toDouble(),
+                    ring_finger_mcp_z = ringMZ.toDouble(),
+                    ring_finger_pip_x = ringPX.toDouble(),
+                    ring_finger_pip_y = ringPY.toDouble(),
+                    ring_finger_pip_z = ringPZ.toDouble(),
+                    ring_finger_dip_x = ringDX.toDouble(),
+                    ring_finger_dip_y = ringDY.toDouble(),
+                    ring_finger_dip_z = ringDZ.toDouble(),
+                    ring_finger_tip_x = ringTX.toDouble(),
+                    ring_finger_tip_y = ringTY.toDouble(),
+                    ring_finger_tip_z = ringTZ.toDouble(),
+                    pinky_mcp_x = pinkyMX.toDouble(),
+                    pinky_mcp_y = pinkyMY.toDouble(),
+                    pinky_mcp_z = pinkyMZ.toDouble(),
+                    pinky_pip_x = pinkyPX.toDouble(),
+                    pinky_pip_y = pinkyPY.toDouble(),
+                    pinky_pip_z = pinkyPZ.toDouble(),
+                    pinky_dip_x = pinkyDX.toDouble(),
+                    pinky_dip_y = pinkyDY.toDouble(),
+                    pinky_dip_z = pinkyDZ.toDouble(),
+                    pinky_tip_x = pinkyTX.toDouble(),
+                    pinky_tip_y = pinkyTY.toDouble(),
+                    pinky_tip_z = pinkyTZ.toDouble()
+                )
+
                 //Log.d(TAG, "손가락 위치값 확인 | $saveData")
 
-                trackActivity.getTappingDetail(saveData)
+
+                //trackActivity.getTappingDetail(saveData)
+                trackActivity.getFingerDataDetail(fingerData)
             }
 
 

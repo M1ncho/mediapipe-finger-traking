@@ -16,4 +16,8 @@ interface DataService {
     @GET("api/finger_data/list/{member_id}")
     fun getMemberData(@Path("member_id") member_id: Int): Call<List<MemberFingerData>>
 
+    // 데이터 업로드 - 모든 위치
+    @POST("api/finger_3d_data/upload")
+    fun upload3DData(@Body data: Finger3DData): Call<SendResult>
+
 }
