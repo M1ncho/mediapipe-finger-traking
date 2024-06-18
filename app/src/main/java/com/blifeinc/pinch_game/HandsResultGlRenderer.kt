@@ -18,7 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.logging.Handler
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
@@ -34,9 +36,16 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
     var countOkY = 0
     var inOkY = 0
 
+    var basicZ = 0
+    var count = 0
+
+
     var onePrint = false
     var maxList = mutableListOf<MaxData>()
-    //private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.zzz")
+
+    var zValueList = mutableListOf<Int>()
+
+
 
 
     private fun loadShader(type: Int, shaderCode: String): Int {
@@ -81,19 +90,19 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
 
             // z 값 판별 -> 값이 작을수록 카메라에 가깝다? => int 변환 시 가까울수록 값이 커짐
+            // 손목 기준
             val lm = result.multiHandLandmarks()[i].landmarkList[0]
             val checkZ = (lm.z * 10000000).toInt()
 
             if (checkZ > 5) {
-                //Log.d(TAG, "LandMark[0] | z : ${lm.z}, $checkZ")
                 drawHollowCircle(lm.x, lm.y, if (isLeftHand) LEFT_HAND_HOLLOW_CIRCLE_COLOR else RIGHT_HAND_HOLLOW_CIRCLE_COLOR)
             }
 
             // 계산에 필요한 landmark value
-            val point1X = (result.multiHandLandmarks()[i].landmarkList[4].x * 100).toInt()
-            val point1Y = (result.multiHandLandmarks()[i].landmarkList[4].y * 100).toInt()
-            val point2X = (result.multiHandLandmarks()[i].landmarkList[8].x * 100).toInt()
-            val point2Y = (result.multiHandLandmarks()[i].landmarkList[8].y * 100).toInt()
+            val point1X = (result.multiHandLandmarks()[i].landmarkList[4].x * 100)
+            val point1Y = (result.multiHandLandmarks()[i].landmarkList[4].y * 100)
+            val point2X = (result.multiHandLandmarks()[i].landmarkList[8].x * 100)
+            val point2Y = (result.multiHandLandmarks()[i].landmarkList[8].y * 100)
 
             val point1Z = (result.multiHandLandmarks()[i].landmarkList[4].z * 100)
             val point2Z = (result.multiHandLandmarks()[i].landmarkList[8].z * 100)
@@ -163,10 +172,45 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             val pinkyTZ = (result.multiHandLandmarks()[i].landmarkList[20].z * 100)
 
 
+            // 손가락 길이
+            //val index_height = abs(point2Y - indexMY)
+            //val thumb_height = abs(point1Y - thumbMY)
+
 
             // 거리값 계산
-            val interval_y = abs( point1Y - point2Y )
+            val interval_y = abs(point1Y.toInt() - point2Y.toInt())
             //Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
+
+
+
+
+            // 유클리드 거리 - test
+            //val aTox = (point2X - point1X).pow(2)
+            //val bToy = (point2Y - point1Y).pow(2)
+            //val cToz = (point2Z - point1Z).pow(2)
+            //val euclidean3D = sqrt(aTox + bToy + cToz)
+
+
+
+            // 맨하탄 거리 - test
+            //val manhattan_y = abs(point1Y - point2Y)
+            //val manhattan_x = abs(point1X - point2X)
+            //val manhattan_z = abs(point1Z - point2Z)
+
+            //val manhattan3D = manhattan_x + manhattan_y + manhattan_z
+
+
+            //
+            val indexTothumbX = abs(indexMX - point1X)
+            val indexTothumbY = abs(indexMY - point2Y)
+            val indexTothumbZ = abs(indexMZ - point2Z)
+
+            val checkInterval = (indexMY - point2Y).toInt()
+
+            val manhattanTest = indexTothumbX + indexTothumbY + indexTothumbZ
+
+
+
 
 
             // 거리 기준 가이드 - 기준치 10~20까지 값
@@ -185,15 +229,25 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             if (trackActivity?.check3sec() == true) {
                 onePrint = false
 
-                startY = interval_y
+                //startY = interval_y
+                //countOkY = ((startY.toFloat() / 10) * 9).toInt()
+                //inOkY = startY / 10
+
+
+                // test value
+                startY = indexTothumbY.toInt()
                 countOkY = ((startY.toFloat() / 10) * 9).toInt()
                 inOkY = startY / 10
+
+                zValueList.add(indexTothumbZ.toInt())
+
 
                 // log 출력용 - 초기 거리값, 계산한 카운트 초기값
                 val maxData = MaxData(
                     max_height = startY,
                     difference = countOkY
                 )
+
                 maxList.add(maxData)
 
                 trackActivity.getIntervalY(interval_y)
@@ -208,11 +262,22 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     var sumDiffer = 0
                     val list = mutableListOf<MaxData>()
 
+
                     // 평균값 계산
                     for (data in maxList) {
                         sumMax += data.max_height
                         sumDiffer += data.difference
                     }
+
+
+                    // z값 test
+                    var avgZ = 0
+                    for (item in zValueList) {
+                        avgZ += item
+                    }
+
+                    basicZ = avgZ / zValueList.size
+
 
 
                     // 값 쳐내기
@@ -226,7 +291,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                         }
                     }
                     maxList.removeAll(list)
-                    //Log.d("Delete Value", "$list")
 
 
                     // 기준값 다시 계산 - max 값 가져오기??
@@ -242,27 +306,19 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                     countOkY = ((startY.toFloat() / 10) * 9).toInt()
                     inOkY = startY / 10
 
-
-                    //Log.d("Data Value", "$startY :: $countOkY :: $inOkY")
                     trackActivity.getIntervalY(newMax)
 
                     onePrint = true
                     maxList.clear()
+
+
+                    count = 0
+                    Log.d("기준값 확인 - 초기화", "$startY  :::  $countOkY  :::  $inOkY  :::  $basicZ")
                 }
 
 
                 val timestamp = System.currentTimeMillis()
                 val timeChange = TimeConvert().convertTime(timestamp)
-
-                val saveData = FingerDataDetail(
-                    time = timeChange,
-                    thumb_x = point1X.toDouble(),
-                    thumb_y = point1Y.toDouble(),
-                    thumb_z = point1Z.toDouble(),
-                    index_x = point2X.toDouble(),
-                    index_y = point2Y.toDouble(),
-                    index_z = point2Z.toDouble()
-                )
 
                 val fingerData = Finger3DDataDetail(
                     time = timeChange,
@@ -333,22 +389,62 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
                 //Log.d(TAG, "손가락 위치값 확인 | $saveData")
 
-
-                //trackActivity.getTappingDetail(saveData)
                 trackActivity.getFingerDataDetail(fingerData)
             }
 
 
 
-            // z의 값..을 같이 검사??
-            // 유효거리 판단 -> 90% 이상??
-            if (interval_y <= inOkY) {
-                now_state = "in"
+
+            Log.d("현재 거리 차이", "$manhattanTest  :::  $indexTothumbX  :::  $checkInterval  :::  $indexTothumbZ")
+
+
+
+            // 조건 설정
+            // z값 변화 체크후 변화가 있을 시 기울기 값과 같이 계산
+            // z의 값..을 같이 검사
+            // 유효거리 판단 -> 90% 이상
+            //
+
+            if (basicZ < indexTothumbZ.toInt()) {
+                val sumInterval = checkInterval + indexTothumbZ.toInt()
+
+                if (sumInterval <= inOkY) {
+                    now_state = "in"
+                }
+                if (sumInterval >= countOkY && now_state == "in") {
+                    now_state = "out"
+                    //count++
+
+                    trackActivity?.setCount()
+
+                    //Log.d("현재 count", "$count")
+                }
             }
-            if (interval_y >= countOkY && now_state == "in") {
-                now_state = "out"
-                trackActivity?.setCount()
+            else {
+                if (checkInterval <= inOkY) {
+                    now_state = "in"
+                }
+                if (checkInterval >= countOkY && now_state == "in") {
+                    now_state = "out"
+                    //count++
+
+                    trackActivity?.setCount()
+
+                    //Log.d("현재 count", "$count")
+                }
             }
+
+
+
+//            if (interval_y <= inOkY) {
+//                now_state = "in"
+//            }
+//            if (interval_y >= countOkY && now_state == "in") {
+//                now_state = "out"
+//                trackActivity?.setCount()
+//            }
+
+
 
 
             // 표시 그리기 함수
