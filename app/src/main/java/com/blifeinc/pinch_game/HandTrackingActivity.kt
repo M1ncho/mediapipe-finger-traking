@@ -194,6 +194,7 @@ class HandTrackingActivity : AppCompatActivity() {
         super.onDestroy()
 
         SaveSettingUtil.setSelectYn(this, 0)
+        HandsResultGlRenderer().release()
     }
 
 

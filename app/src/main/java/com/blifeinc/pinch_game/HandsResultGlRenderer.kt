@@ -172,16 +172,9 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             val pinkyTZ = (result.multiHandLandmarks()[i].landmarkList[20].z * 100)
 
 
-            // 손가락 길이
-            //val index_height = abs(point2Y - indexMY)
-            //val thumb_height = abs(point1Y - thumbMY)
-
-
             // 거리값 계산
             val interval_y = abs(point1Y.toInt() - point2Y.toInt())
             //Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
-
-
 
 
             // 유클리드 거리 - test
@@ -189,15 +182,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             //val bToy = (point2Y - point1Y).pow(2)
             //val cToz = (point2Z - point1Z).pow(2)
             //val euclidean3D = sqrt(aTox + bToy + cToz)
-
-
-
-            // 맨하탄 거리 - test
-            //val manhattan_y = abs(point1Y - point2Y)
-            //val manhattan_x = abs(point1X - point2X)
-            //val manhattan_z = abs(point1Z - point2Z)
-
-            //val manhattan3D = manhattan_x + manhattan_y + manhattan_z
 
 
             //
@@ -211,11 +195,10 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
 
 
-
-
             // 거리 기준 가이드 - 기준치 10~20까지 값
+            // 기준값 변화 18 -> 20
             if (trackActivity?.isPlay != true && trackActivity?.check3sec() != true) {
-                if (point1Y - point2Y < 18 ) {
+                if (point1Y - point2Y < 20 ) {
                     trackActivity?.showGuidLine(true)
                 }
                 else {
@@ -229,12 +212,8 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             if (trackActivity?.check3sec() == true) {
                 onePrint = false
 
-                //startY = interval_y
-                //countOkY = ((startY.toFloat() / 10) * 9).toInt()
-                //inOkY = startY / 10
 
-
-                // test value
+                // value setting
                 startY = indexTothumbY.toInt()
                 countOkY = ((startY.toFloat() / 10) * 9).toInt()
                 inOkY = startY / 10
@@ -393,8 +372,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             }
 
 
-
-
             Log.d("현재 거리 차이", "$manhattanTest  :::  $indexTothumbX  :::  $checkInterval  :::  $indexTothumbZ")
 
 
@@ -403,8 +380,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             // z값 변화 체크후 변화가 있을 시 기울기 값과 같이 계산
             // z의 값..을 같이 검사
             // 유효거리 판단 -> 90% 이상
-            //
-
             if (basicZ < indexTothumbZ.toInt()) {
                 val sumInterval = checkInterval + indexTothumbZ.toInt()
 
@@ -413,10 +388,8 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                 }
                 if (sumInterval >= countOkY && now_state == "in") {
                     now_state = "out"
-                    //count++
 
                     trackActivity?.setCount()
-
                     //Log.d("현재 count", "$count")
                 }
             }
@@ -426,25 +399,11 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
                 }
                 if (checkInterval >= countOkY && now_state == "in") {
                     now_state = "out"
-                    //count++
-
                     trackActivity?.setCount()
 
                     //Log.d("현재 count", "$count")
                 }
             }
-
-
-
-//            if (interval_y <= inOkY) {
-//                now_state = "in"
-//            }
-//            if (interval_y >= countOkY && now_state == "in") {
-//                now_state = "out"
-//                trackActivity?.setCount()
-//            }
-
-
 
 
             // 표시 그리기 함수
@@ -461,8 +420,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
         val result = sum / 100 * percent
         return  result
     }
-
-
 
 
     // 종료
