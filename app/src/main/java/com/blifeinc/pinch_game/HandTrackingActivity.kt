@@ -118,9 +118,6 @@ class HandTrackingActivity : AppCompatActivity() {
 
         TedPermission.create().setPermissionListener(permissionListener).setPermissions(*REQUIRED_PERMISSIONS).check()
 
-        //
-        dataService = FingertappingClient.instance().create(DataService::class.java)
-
 
         binding.btn15sec.setOnClickListener {
             changeTime(15)
