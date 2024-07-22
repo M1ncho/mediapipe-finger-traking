@@ -33,13 +33,10 @@ class HandTrackingActivity : AppCompatActivity() {
 
     var count = 0
     var startAbsY = 0
-    var rounds = 0
     var leftPostYn = false
     var rightPostYn = false
 
     var cookieManager: CookieManager? = null
-    val baseUrl = "http://med.blifeinc.com/manager/fingerdata/chart/"
-    var chartURL = ""
     var sendDataYN = false
 
     // count down 관련
@@ -124,10 +121,6 @@ class HandTrackingActivity : AppCompatActivity() {
         //
         dataService = FingertappingClient.instance().create(DataService::class.java)
 
-        rounds = SaveSettingUtil.getRound(this)
-        SaveSettingUtil.setSelectYn(this, 0)
-
-
 
         binding.btn15sec.setOnClickListener {
             changeTime(15)
@@ -142,7 +135,8 @@ class HandTrackingActivity : AppCompatActivity() {
         }
 
 
-        //SaveSettingUtil.setSelectYn(this, 0)
+        // 처음 시작시 손 방향을 선택 하게끔 설정
+
         binding.btnStart.setOnClickListener {
             if (SaveSettingUtil.getSelectYn(this) == 0) {
                 HandsResultGlRenderer().onePrint = false
@@ -150,39 +144,9 @@ class HandTrackingActivity : AppCompatActivity() {
                 dialog.showDialog()
             }
             else {
-                //HandsResultGlRenderer().onePrint = false
                 tappingStart()
             }
         }
-
-
-        binding.btnSave.setOnClickListener {
-            Log.d("DATA CHECK ", "${tappingList.size}   $tappingList")
-            //sendTappingDate()
-            sendFinger3DData()
-        }
-
-
-        setCookieAllow()
-
-        binding.btnShowChart.setOnClickListener {
-            val userId = SaveSettingUtil.getMemberId(this)
-            chartURL = baseUrl + userId
-
-            binding.viewWebChart.settings.run {
-                javaScriptEnabled = true
-                javaScriptCanOpenWindowsAutomatically = true
-                loadWithOverviewMode = true
-                builtInZoomControls = false
-
-                setSupportMultipleWindows(true)
-            }
-
-            binding.layoutWeb.visibility = View.VISIBLE
-            binding.viewWebChart.webViewClient = WebViewClient()
-            binding.viewWebChart.loadUrl(chartURL)
-        }
-
 
         binding.ivCloseWeb.setOnClickListener {
             binding.layoutWeb.visibility = View.GONE
@@ -196,7 +160,6 @@ class HandTrackingActivity : AppCompatActivity() {
         SaveSettingUtil.setSelectYn(this, 0)
         HandsResultGlRenderer().release()
     }
-
 
 
 
@@ -246,7 +209,6 @@ class HandTrackingActivity : AppCompatActivity() {
                 glSurfaceView.height
         )
     }
-
 
 
 
@@ -326,17 +288,12 @@ class HandTrackingActivity : AppCompatActivity() {
                 binding.barTimer.progress = (millisInFuture / 1000).toInt()
                 binding.btnStart.text = "시작"
                 binding.btnStart.visibility = View.VISIBLE
-                binding.btnSave.visibility = View.VISIBLE
                 binding.btn15sec.visibility = View.VISIBLE
                 binding.btn10sec.visibility = View.VISIBLE
                 binding.btn5sec.visibility = View.VISIBLE
 
-                if (sendDataYN) {
-                    binding.btnShowChart.visibility = View.VISIBLE
-                }
-
                 isPlay = false
-                //Log.d("DATA CHECK", "${tappingList.size}  $tappingList")
+                SaveSettingUtil.setSelectYn(this@HandTrackingActivity, 0)
             }
         }
     }
@@ -353,14 +310,9 @@ class HandTrackingActivity : AppCompatActivity() {
 
             binding.btnStart.text = "중지"
             binding.btnStart.visibility = View.INVISIBLE
-            binding.btnSave.visibility = View.INVISIBLE
             binding.btn15sec.visibility = View.INVISIBLE
             binding.btn10sec.visibility = View.INVISIBLE
             binding.btn5sec.visibility = View.INVISIBLE
-
-            if (sendDataYN) {
-                binding.btnShowChart.visibility = View.INVISIBLE
-            }
 
             binding.tvDelayCount.visibility = View.VISIBLE
             sCountDown.start()
@@ -383,13 +335,6 @@ class HandTrackingActivity : AppCompatActivity() {
 
     fun getIntervalY(y: Int) {
         startAbsY = y
-
-        //Log.d("START ", "첫 y 위치값의 절대값 : $startAbsY ")
-    }
-
-    // list 저장
-    fun getTappingDetail(data: FingerDataDetail) {
-        tappingList.add(data)
     }
 
     // list 저장 - all landmark
@@ -412,93 +357,6 @@ class HandTrackingActivity : AppCompatActivity() {
     }
 
 
-
-
-    // tapping 데이터 보내기
-    fun sendTappingDate() {
-        var saveData = FingerData(
-                member_id = SaveSettingUtil.getMemberId(this),
-                tapping_number = count,
-                hand_type = SaveSettingUtil.getHandType(this),
-                finger_max_height = startAbsY,
-                finger_data_details = tappingList,
-                round = rounds
-        )
-
-        val dataPost = dataService.uploadTapData(saveData)
-        dataPost.enqueue(object : Callback<SendResult> {
-            override fun onResponse(call: Call<SendResult>, response: Response<SendResult>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@HandTrackingActivity, "전송을 완료했습니다.", Toast.LENGTH_SHORT).show()
-
-                    checkPostHandType()
-
-                    runOnUiThread {
-                        sendDataYN = true
-                        binding.btnShowChart.visibility = View.VISIBLE
-                    }
-
-                    Log.d("Success Post Data ", "${response.body()!!.result}  $sendDataYN")
-                }
-            }
-            override fun onFailure(call: Call<SendResult>, t: Throwable) {
-                Log.d("Failed POST DATA ", "${t.message}")
-            }
-        })
-    }
-
-    fun sendFinger3DData() {
-        var sendData = Finger3DData(
-            member_id = SaveSettingUtil.getMemberId(this),
-            tapping_number = count,
-            hand_type = SaveSettingUtil.getHandType(this),
-            finger_max_height = startAbsY,
-            finger_data_details = fingerDataList,
-            round = rounds
-        )
-
-        val dataPost = dataService.upload3DData(sendData)
-        dataPost.enqueue(object : Callback<SendResult> {
-            override fun onResponse(call: Call<SendResult>, response: Response<SendResult>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(this@HandTrackingActivity, "전송을 완료했습니다.", Toast.LENGTH_SHORT).show()
-
-                    checkPostHandType()
-
-                    runOnUiThread {
-                        sendDataYN = true
-                        binding.btnShowChart.visibility = View.VISIBLE
-                    }
-
-                    Log.d("Success Post Data ", "${response.body()!!.result}  $sendDataYN")
-                }
-            }
-            override fun onFailure(call: Call<SendResult>, t: Throwable) {
-                Log.d("Failed POST DATA ", "${t.message}")
-            }
-        })
-    }
-
-
-    // 측정한 손의 데이터 유무 확인
-    fun checkPostHandType() {
-        if (SaveSettingUtil.getHandType(this@HandTrackingActivity) == 0) {
-            rightPostYn = true
-        }
-        else if (SaveSettingUtil.getHandType(this@HandTrackingActivity) == 1) {
-            leftPostYn = true
-        }
-
-        if (leftPostYn && rightPostYn) {
-            binding.btnStart.text = "목록보기"
-        }
-        else {
-            changeBtnText()
-        }
-
-        SaveSettingUtil.setSelectYn(this, 0)
-    }
-
     fun changeBtnText() {
         if (SaveSettingUtil.getSelectYn(this) == 0) {
             binding.btnStart.text = "선택"
@@ -507,22 +365,6 @@ class HandTrackingActivity : AppCompatActivity() {
             binding.btnStart.text = "시작"
         }
     }
-
-
-
-
-    // web cookie 관련?
-    fun setCookieAllow() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            val cookieManager = CookieManager.getInstance()
-            cookieManager.setAcceptCookie(true)
-            cookieManager.setAcceptThirdPartyCookies(binding.viewWebChart, true)
-        }
-        else {
-            CookieSyncManager.createInstance(this)
-        }
-    }
-
 
 
 }

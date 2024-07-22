@@ -174,7 +174,6 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
             // 거리값 계산
             val interval_y = abs(point1Y.toInt() - point2Y.toInt())
-            //Log.d("tapping 거리 기준값 Value 확인", "${point1Y - point2Y}")
 
 
             // 유클리드 거리 - test
@@ -184,7 +183,7 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
             //val euclidean3D = sqrt(aTox + bToy + cToz)
 
 
-            //
+            // 맨하탄 거리 계산
             val indexTothumbX = abs(indexMX - point1X)
             val indexTothumbY = abs(indexMY - point2Y)
             val indexTothumbZ = abs(indexMZ - point2Z)
@@ -196,9 +195,8 @@ class HandsResultGlRenderer : ResultGlRenderer<HandsResult> {
 
 
             // 거리 기준 가이드 - 기준치 10~20까지 값
-            // 기준값 변화 18 -> 20
             if (trackActivity?.isPlay != true && trackActivity?.check3sec() != true) {
-                if (point1Y - point2Y < 20 ) {
+                if (point1Y - point2Y < 18 ) {
                     trackActivity?.showGuidLine(true)
                 }
                 else {

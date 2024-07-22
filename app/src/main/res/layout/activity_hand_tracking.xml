@@ -159,7 +159,6 @@
 
 
 
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_15sec"
             android:layout_width="60dp"
@@ -216,38 +215,6 @@
             android:textSize="23sp"
             android:gravity="center"
             android:text="선택"/>
-
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_save"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toTopOf="@id/btn_start"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="13dp"
-            android:background="@drawable/select_btn"
-            android:textColor="@color/white"
-            android:textSize="23sp"
-            android:gravity="center"
-            android:text="전송"/>
-
-
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_show_chart"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toTopOf="@id/btn_save"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="13dp"
-            android:background="@drawable/select_btn"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:text="차트 보기"
-            android:visibility="invisible"/>
 
 
 
